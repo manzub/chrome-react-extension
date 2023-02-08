@@ -1,0 +1,27 @@
+.App {
+  background: #edf0f6;
+}
+
+.AppContent {
+  height: 100vh;
+  /* height: calc(100vh - 73px); */
+  /* top right bottom left */
+  padding: 10px 10px 75px 10px;
+  /* padding: 0.5rem; */
+}
+
+.bottomNav {
+  width: 100%;
+  background-color: #fff;
+  border-top: 1px solid #e3e3e3;
+  position: fixed;
+  bottom: 0;
+}
+
+.tabItem, .tabItemLink {
+  font-size: 10px;
+}
+
+.tabItem:hover {
+  background: #e3e3e3
+}

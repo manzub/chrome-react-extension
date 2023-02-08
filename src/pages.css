@@ -1,0 +1,58 @@
+.homeHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-bottom: 10px;
+  border-bottom: 1px solid #e3e3e3;
+}
+
+.searchTextField {
+  width: 50%;
+}
+
+.passwordOutput {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 97.2%;
+  padding: 15px 5px;
+  background-color: #DAEAE5;
+  /* border-bottom: 3px solid #05A877; */
+}
+
+.passwordOutputBlock {
+  display: block;
+}
+
+.generatorBlock {
+  padding: 5px;
+}
+
+.vaultItem {
+  background-color: #fff;
+  border-radius: 7px;
+  border: 1px solid #e3e3e3;
+  padding: 5px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 97.2%;
+}
+
+.vaultItemInfo {
+  display: flex;
+  align-items: center;
+  gap: .5rem;
+}
+
+.vaultItemInfo img {
+  border-radius: 7px;
+}
+
+.vaultItemInfo > .vaultItemDetails p {
+  color: #444;
+}
+
+.vaultItemInfo > .vaultItemDetails h4 {
+  font-size: 15px;
+}
