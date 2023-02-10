@@ -125,7 +125,7 @@ export default function Generate() {
       <LinearProgress color={passwordStrength.color} variant="determinate" value={100} />
       <h3 style={{ padding: '10px 5px', color: '#2e7d32', textTransform: 'capitalize' }}>{passwordStrength.message}</h3>
       <div className="generatorBlock">
-        <p>Password Length: <input type="number" style={{ width: '20px', padding: '5px', fontSize: '15px' }} value={passwordLength} onChange={passwordLengthHandle} /> characters</p>
+        <p>Password Length: <input type="number" style={{ width: '35px', padding: '5px', fontSize: '15px' }} value={passwordLength} onChange={passwordLengthHandle} /> characters</p>
         <Slider defaultValue={10} value={passwordLength} min={4} max={30} onChange={passwordLengthHandle} />
         <FormGroup style={{ padding: '10px' }}>
           <FormControlLabel sx={{ padding: '5px 0px' }} control={<Checkbox disabled={disabledCheckbox} checked={strengthConfig.lowercase} onChange={strengthConfigHandle} name="lowercase" />} label="Lowercase (abc)" />

@@ -4,14 +4,14 @@ import * as ROUTES from './constants/routes';
 import React from 'react';
 import './App.css';
 import './pages.css';
-import { Route, Routes, useNavigate } from 'react-router-dom';
+import { Navigate, Route, Routes, useNavigate } from 'react-router-dom';
 import { LoggedInRedirect, ProtectedRoute } from './helpers/routes';
 import Home from './pages/home';
-import Page404 from './pages/page404';
 import Generate from './pages/generate';
 import Login from './pages/login';
 import useAuthListener from './hooks/use-auth-listener';
 import Signup from './pages/signup';
+import Account from './pages/account';
 
 function App() {
   const { user } = useAuthListener();
@@ -39,6 +39,11 @@ function App() {
               <Generate />
             </ProtectedRoute>
           } />
+          <Route path={ROUTES.ACCOUNTS} element={
+            <ProtectedRoute user={user}>
+              <Account />
+            </ProtectedRoute>
+          } />
 
           <Route path="/login" element={
             <LoggedInRedirect user={user} redirectPath={ROUTES.HOME}>
@@ -50,7 +55,7 @@ function App() {
               <Signup />
             </LoggedInRedirect>
           } />
-          <Route path="*" element={<Page404 />} />
+          <Route path="*" element={<Navigate to="/login" />} />
         </Routes>
       </div>
       { user &&  <div className='bottomNav'>

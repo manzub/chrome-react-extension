@@ -58,7 +58,7 @@ export default function Login() {
     <div className="loginHeader">
       <h3>LOG IN</h3>
       <p>
-        OR <Link>CREATE AN ACCOUNT</Link>
+        OR <Link to="/signup">CREATE AN ACCOUNT</Link>
       </p>
     </div>
     <div className="loginBody">
