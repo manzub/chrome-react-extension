@@ -10,6 +10,18 @@
   /* padding: 0.5rem; */
 }
 
+.loginPage {
+  padding: 30px 0px;
+  height: 70vh;
+}
+
+.loginHeader {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+
 .bottomNav {
   width: 100%;
   background-color: #fff;
