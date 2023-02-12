@@ -3,7 +3,7 @@
 }
 
 .AppContent {
-  height: 100vh;
+  height: 600px;
   /* height: calc(100vh - 73px); */
   /* top right bottom left */
   padding: 10px 10px 75px 10px;
@@ -32,6 +32,7 @@
 
 .tabItem, .tabItemLink {
   font-size: 10px;
+  text-transform: uppercase;
 }
 
 .tabItem:hover {

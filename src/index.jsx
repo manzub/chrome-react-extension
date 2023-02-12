@@ -33,7 +33,7 @@ ReactDOM.render(
     <Provider value={{ firebase, auth, firestore }}>
       <ReduxProvider store={store}>
         <BrowserRouter>
-          <App />
+          <App auth={auth} />
         </BrowserRouter>
       </ReduxProvider>
     </Provider>

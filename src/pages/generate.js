@@ -32,6 +32,7 @@ export default function Generate() {
     setDisabled(false);
   }
 
+  // TODO: chrome get current tab
   const copyGenerated = React.useCallback(() => {
     clipboard.copy(passwordStrength.validKey);
     setSnackbar(true);
