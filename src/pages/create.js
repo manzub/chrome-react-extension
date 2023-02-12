@@ -1,11 +1,18 @@
 import { ArrowBackRounded, Visibility, VisibilityOff, Close } from '@mui/icons-material';
-import { Box, Button, Collapse, Alert, FormControl, IconButton, InputAdornment, InputLabel, OutlinedInput, TextField } from '@mui/material';
-import React from 'react';
+import { Box, Button, Collapse, Alert, FormControl, IconButton, InputAdornment, InputLabel, OutlinedInput, TextField, Snackbar } from '@mui/material';
+import { addDoc, collection } from 'firebase/firestore';
+import React, { useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { FirebaseContext } from '../context/firebase';
+import useAuthListener from '../hooks/use-auth-listener';
 
 export default function Create() {
   const navigate = useNavigate();
+  const { user } = useAuthListener();
+  const { firestore } = useContext(FirebaseContext);
 
+  const [snackbar, setSnackbar] = React.useState(false);
+  const [snackMsg, setSnackMsg] = React.useState(null);
   const [open, setOpen] = React.useState(false);
   const [error, setError] = React.useState('');
   const [isLoading, setLoading] = React.useState(false);
@@ -30,12 +37,25 @@ export default function Create() {
     setLoading(true)
 
     try {
+      await addDoc(collection(firestore, "vault"), { ...form, owner: user.uid })
       setLoading(false);
+      setSnackbar(true);
+      setSnackMsg(`Added ${form.web_url} to vault!`)
     } catch(error) {
       setLoading(false);
+      setSnackbar(false);
+      setSnackMsg("");
       showError(error.message);
     }
   }
+
+  const action = (
+    <React.Fragment>
+      <IconButton size="small" aria-label="close" color="inherit" onClick={() => setSnackbar(false)}>
+        <Close fontSize="small" />
+      </IconButton>
+    </React.Fragment>
+  );
 
   return (<div>
     <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
@@ -89,5 +109,6 @@ export default function Create() {
         </div>
       </div>
     </Box>
+    <Snackbar open={snackbar} autoHideDuration={3000} onClose={() => setSnackbar(false)} message={snackMsg} action={action} />
   </div>)
 }
