@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useContext, useEffect } from "react";
 import { AddRounded, Close, ContactsRounded, ContentCopy, DeleteRounded, OpenInNewRounded, PaymentRounded, SearchRounded } from "@mui/icons-material";
 import { IconButton, InputAdornment, Snackbar, TextField } from "@mui/material";
 import { Button } from "../helpers/styledComponents";
@@ -19,6 +19,7 @@ export default function Home({ user }) {
   const [snackbar, setSnackbar] = React.useState(false);
   const [snackMsg, setSnackMsg] = React.useState(null);
   const [anchorEl, setAnchorEl] = React.useState(null);
+  const [displayItems, setDisplayItems] = React.useState([]);
 
   const open = Boolean(anchorEl);
   const { vault: vaultItems } = useContent('vault', user.uid)
@@ -44,6 +45,22 @@ export default function Home({ user }) {
     }
   }
 
+  const filterVaultItems = ({ target }) => {
+    let searchText = String(target.value);
+    if(searchText.length > 0) {
+      const results = vaultItems.filter(function(item) {
+        if(String(item.email).includes(searchText)) return true;
+        if(String(item.web_url).includes(searchText)) return true;
+        return false;
+      })
+      setDisplayItems(results);
+    }
+  }
+
+  useEffect(() => {
+    setDisplayItems(vaultItems);
+  }, [vaultItems])
+
   const action = (
     <React.Fragment>
       <IconButton size="small" aria-label="close" color="inherit" onClick={() => setSnackbar(false)}>
@@ -54,7 +71,7 @@ export default function Home({ user }) {
 
   return (<div>
     <div className="homeHeader">
-      <TextField className="searchTextField" InputProps={{
+      <TextField onChange={filterVaultItems} className="searchTextField" InputProps={{
         startAdornment: (
           <InputAdornment position="start">
             <SearchRounded />
@@ -81,11 +98,11 @@ export default function Home({ user }) {
       </Menu>
     </div>
     <div className="homeContents" style={{ padding: '10px 0px' }}>
-      {vaultItems.length === 0 && <React.Fragment>
-        <h4 style={{ textAlign: 'center' }}>Nothing in vault yet</h4>
+      {displayItems.length === 0 && <React.Fragment>
+        <h4 style={{ textAlign: 'center' }}>Nothing to see here!</h4>
       </React.Fragment>}
 
-      {vaultItems.map((item, idx) => (<React.Fragment key={idx}>
+      {displayItems.map((item, idx) => (<React.Fragment key={idx}>
         <div className="vaultItem">
           <div className="vaultItemInfo">
             <img src={`${item.web_url}/favicon.ico`} alt="favicon" />
