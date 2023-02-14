@@ -1,3 +1,4 @@
+/* eslint-disable no-undef */
 import React, { useEffect } from "react";
 import Box from '@mui/material/Box';
 import Alert from '@mui/material/Alert';
@@ -35,8 +36,13 @@ export default function Generate() {
   // TODO: chrome get current tab
   const copyGenerated = React.useCallback(() => {
     clipboard.copy(passwordStrength.validKey);
-    setSnackbar(true);
-    setSnackMsg('copied to clickboard');
+    chrome.tabs && chrome.tabs.query({
+      active: true,
+      currentWindow: true
+    }, tabs => {
+      setSnackMsg(`copied to clickboard on ${new URL(tabs[0].url).origin}`);
+      setSnackbar(true);
+    })
   }, [clipboard, passwordStrength])
 
   const handleClose = (event, reason) => {
@@ -71,19 +77,6 @@ export default function Generate() {
     let passwordStrength = { validKey: result, color: result.length < 6 ? 'error' : 'success', message: result.length < 6 ? 'weak' : 'Good' }
 
     // TODO: switch (result.length) {
-    //   case result.length < 6:
-    //     passwordStrength.color = 'error';
-    //     passwordStrength.message = 'weak';
-    //     break;
-    //   case result.length > 6 && result.length < 10:
-    //     passwordStrength.color = 'warning';
-    //     passwordStrength.message = 'average';
-    //     break;
-    //   default:
-    //     passwordStrength.color = 'success';
-    //     passwordStrength.message = 'very good';
-    //     break;
-    // }
     updateStrength(passwordStrength);
   }, [passwordLength, strengthConfig])
 

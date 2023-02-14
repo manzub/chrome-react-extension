@@ -1,3 +1,4 @@
+/* eslint-disable no-undef */
 import { ArrowBackRounded, Visibility, VisibilityOff, Close } from '@mui/icons-material';
 import { Box, Button, Collapse, Alert, FormControl, IconButton, InputAdornment, InputLabel, OutlinedInput, TextField, Snackbar } from '@mui/material';
 import { addDoc, collection } from 'firebase/firestore';
@@ -17,7 +18,7 @@ export default function Create() {
   const [error, setError] = React.useState('');
   const [isLoading, setLoading] = React.useState(false);
   const [showPassword, setShowPassword] = React.useState(false);
-  const [form, updateForm] = React.useState({ web_url: '', email: '', password: '' });
+  const [form, updateForm] = React.useState({ favIconUrl: '', web_url: '', email: '', password: '' });
 
   const isInvalid = form.web_url === '' || form.email === '' || form.password === '' || isLoading;
 
@@ -67,8 +68,8 @@ export default function Create() {
     {/* TODO: chrome get current tab */}
     <Box sx={{ backgroundColor: '#fff', width: '95%', borderRadius: '5px', padding: '10px' }}>
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-        <img src={`${form.web_url}/favicon.ico`} alt='' style={{ height: '54px' }} />
-        <TextField sx={{ flex: 2, margin: '0px 0px 0px 10px' }} required id="outlined-required" label="Website Url" value={form.web_url} onChange={({target}) => updateForm({ ...form, web_url: target.value })} />
+        <img src={`${form.favIconUrl}`} alt='' style={{ height: '54px' }} />
+        <TextField sx={{ flex: 2, margin: '0px 0px 0px 10px' }} required id="outlined-required" label="Website Url" value={form.web_url} onChange={({ target }) => updateForm({ ...form, web_url: target.value })} />
       </div>
       <div style={{ marginTop: '20px' }}>
       {error && <Collapse sx={{ marginBottom: '20px' }} in={open}>
@@ -78,7 +79,7 @@ export default function Create() {
               </IconButton>
             } sx={{ mb: 2 }}>{error}</Alert>
           </Collapse>}
-        <TextField sx={{ marginBottom: '20px', width: '100%' }} required label="Email" value={form.email} onChange={({target}) => updateForm({ ...form, email: target.value })} />
+        <TextField sx={{ marginBottom: '20px', width: '100%' }} required label="Email" value={form.email} onChange={({ target }) => updateForm({ ...form, email: target.value })} />
         <FormControl sx={{ width: '100%' }} variant="outlined">
           <InputLabel htmlFor="outlined-adornment-password">Master Password</InputLabel>
           <OutlinedInput

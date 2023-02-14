@@ -13,11 +13,12 @@ import useAuthListener from './hooks/use-auth-listener';
 import Signup from './pages/signup';
 import Create from './pages/create';
 import { signOut } from 'firebase/auth';
+import Alerts from './pages/alerts';
 
 function App({ auth }) {
   const { user } = useAuthListener();
   const navigate = useNavigate();
-  const tabs = ['/', '/generate', '/alert', '/account'];
+  const tabs = ['/', '/generate', '/alerts', '/account'];
   const [value, setValue] = React.useState(0);
 
 
@@ -44,6 +45,11 @@ function App({ auth }) {
           <Route path={ROUTES.CREATE} element={
             <ProtectedRoute user={user}>
               <Create />
+            </ProtectedRoute>
+          } />
+          <Route path={ROUTES.ALERT} element={
+            <ProtectedRoute user={user}>
+              <Alerts />
             </ProtectedRoute>
           } />
 

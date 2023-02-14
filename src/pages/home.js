@@ -54,7 +54,7 @@ export default function Home({ user }) {
         return false;
       })
       setDisplayItems(results);
-    }
+    } else setDisplayItems(vaultItems);
   }
 
   useEffect(() => {
@@ -102,25 +102,28 @@ export default function Home({ user }) {
         <h4 style={{ textAlign: 'center' }}>Nothing to see here!</h4>
       </React.Fragment>}
 
-      {displayItems.map((item, idx) => (<React.Fragment key={idx}>
-        <div className="vaultItem">
-          <div className="vaultItemInfo">
-            <img src={`${item.web_url}/favicon.ico`} alt="favicon" />
-            <div className="vaultItemDetails">
-              <p>{item.web_url}</p>
-              <h4>{item.email}</h4>
+      {displayItems.map((item, idx) => {
+        const domain = new URL(item.web_url);
+        return(<React.Fragment key={idx}>
+          <div className="vaultItem">
+            <div className="vaultItemInfo">
+              <img width="50" src={`https://s2.googleusercontent.com/s2/favicons?domain=${domain.hostname}`} alt="favicon" />
+              <div className="vaultItemDetails">
+                <p>{domain.origin}</p>
+                <h4>{item.email}</h4>
+              </div>
+            </div>
+            <div className="buttonActions">
+              <IconButton onClick={() => clipboardCopy(item.value)}>
+                <ContentCopy />
+              </IconButton>
+              <IconButton onClick={() => deleteVaultItem(item)}>
+                <DeleteRounded />
+              </IconButton>
             </div>
           </div>
-          <div className="buttonActions">
-            <IconButton onClick={() => clipboardCopy(item.value)}>
-              <ContentCopy />
-            </IconButton>
-            <IconButton onClick={() => deleteVaultItem(item)}>
-              <DeleteRounded />
-            </IconButton>
-          </div>
-        </div>
-      </React.Fragment>))}
+        </React.Fragment>)
+      })}
     </div>
     <Snackbar open={snackbar} autoHideDuration={3000} onClose={handleClose} message={snackMsg} action={action} />
   </div>)

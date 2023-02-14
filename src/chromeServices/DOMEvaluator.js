@@ -1,9 +1,11 @@
-import { DOMMessage, DOMMessageResponse } from '../types';
+/* eslint-disable no-undef */
+const messagesFromReactAppListener = (message, sender, sendResponse) => {
+  console.log('[content.js]. Message received', message);
+  if(message === 'perform action') {
 
-const messagesFromReactAppListener = (msg: DOMMessage, sender: chrome.runtime.MessageSender, sendResponse: (response: DOMMessageResponse) => void) => {
-  console.log('[content.js]. Message received', msg);
+  }
 
-  const response: DOMMessageResponse = {
+  const response = {
     title: document.title,
     headlines: Array.from(document.getElementsByTagName<"h1">("h1")).map(h1 => h1.innerText)
   };
