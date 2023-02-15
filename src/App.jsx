@@ -1,7 +1,8 @@
+/* eslint-disable no-undef */
 import { BottomNavigation, BottomNavigationAction } from '@mui/material';
 import { HelpRounded, LockClockRounded, LockResetRounded, LogoutRounded } from "@mui/icons-material";
 import * as ROUTES from './constants/routes';
-import React from 'react';
+import React, { useEffect } from 'react';
 import './App.css';
 import './pages.css';
 import { Navigate, Route, Routes, useNavigate } from 'react-router-dom';
@@ -14,8 +15,10 @@ import Signup from './pages/signup';
 import Create from './pages/create';
 import { signOut } from 'firebase/auth';
 import Alerts from './pages/alerts';
+import { DOMMessages } from './constants/constants';
+import { addDoc, collection } from 'firebase/firestore';
 
-function App({ auth }) {
+function App({ auth, firestore }) {
   const { user } = useAuthListener();
   const navigate = useNavigate();
   const tabs = ['/', '/generate', '/alerts', '/account'];
@@ -27,6 +30,24 @@ function App({ auth }) {
     if (newValue === 3) signOut(auth);
     else navigate(tabs[newValue]);
   }
+
+  useEffect(() => {
+    chrome.tabs && chrome.tabs.query({
+      active: true, currentWindow: true
+    }, function(tabs) {
+      chrome.tabs.sendMessage(tabs[0].id || 0, DOMMessages.LISTEN, function(response) {
+        // TODO: do something with response
+        // TODO: alert to add to vault
+        // TODO: get items from password
+        if(window.confirm('add to vault?')) {
+          let domain = new URL(tabs[0].url);
+          addDoc(collection(firestore, "vault"), { ...response, favIconUrl: tabs[0].favIconUrl, web_url: domain.origin, owner: user.uid }).then(() => {
+            window.alert(`${domain.origin} added to vault`);
+          })
+        }
+      })
+    })
+  })
 
   return (
     <div className="App">

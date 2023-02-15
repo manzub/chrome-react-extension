@@ -11,7 +11,8 @@
   "permissions": [
     "activeTab",
     "clipboardRead",
-    "clipboardWrite"
+    "clipboardWrite",
+    "tabs"
   ],
   "content_scripts": [
     {

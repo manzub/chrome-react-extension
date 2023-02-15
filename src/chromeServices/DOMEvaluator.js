@@ -1,14 +1,27 @@
+import { DOMMessages } from "../constants/constants";
+import { encryptData } from "../encrypt";
+
 /* eslint-disable no-undef */
-const messagesFromReactAppListener = (message, sender, sendResponse) => {
+const messagesFromReactAppListener = (message, params, sendResponse) => {
   console.log('[content.js]. Message received', message);
-  if(message === 'perform action') {
-
+  let response = {};
+  
+  if(message === DOMMessages.LISTEN) {
+    let formsArray = document.querySelectorAll("form");
+    formsArray.forEach(formElem => {
+      formElem.addEventListener('submit', function(e) {
+        let inputs = formElem.getElementsByTagName("input")
+        for (let index = 0; index < inputs.length; index++) {
+          const element = inputs[index];
+          let inputType = element.getAttribute('type');
+          response = {
+            email: inputType === 'email' && element.value,
+            value: inputType === 'password' && encryptData(element.value)
+          }
+        }
+      })
+    })
   }
-
-  const response = {
-    title: document.title,
-    headlines: Array.from(document.getElementsByTagName<"h1">("h1")).map(h1 => h1.innerText)
-  };
 
   console.log('[content.js]. Message response', response);
 

@@ -5,6 +5,7 @@ import { addDoc, collection } from 'firebase/firestore';
 import React, { useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { FirebaseContext } from '../context/firebase';
+import { encryptData } from '../encrypt';
 import useAuthListener from '../hooks/use-auth-listener';
 
 export default function Create() {
@@ -18,9 +19,9 @@ export default function Create() {
   const [error, setError] = React.useState('');
   const [isLoading, setLoading] = React.useState(false);
   const [showPassword, setShowPassword] = React.useState(false);
-  const [form, updateForm] = React.useState({ favIconUrl: '', web_url: '', email: '', password: '' });
+  const [form, updateForm] = React.useState({ favIconUrl: '', web_url: '', email: '', value: '' });
 
-  const isInvalid = form.web_url === '' || form.email === '' || form.password === '' || isLoading;
+  const isInvalid = form.web_url === '' || form.email === '' || form.value === '' || isLoading;
 
   const handleClickShowPassword = () => setShowPassword((show) => !show);
 
@@ -83,10 +84,10 @@ export default function Create() {
         <FormControl sx={{ width: '100%' }} variant="outlined">
           <InputLabel htmlFor="outlined-adornment-password">Master Password</InputLabel>
           <OutlinedInput
-            error={form.password === ''}
+            error={form.value === ''}
             required
-            value={form.password}
-            onChange={({target}) => updateForm({ ...form, password: target.value })}
+            value={form.value}
+            onChange={({target}) => updateForm({ ...form, value: encryptData(target.value) })}
             id="outlined-adornment-password"
             type={showPassword ? 'text' : 'password'}
             endAdornment={
