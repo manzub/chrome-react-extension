@@ -7,7 +7,7 @@ import Collapse from '@mui/material/Collapse';
 import CloseIcon from '@mui/icons-material/Close';
 import { ContentCopy, RefreshRounded } from "@mui/icons-material";
 import { Checkbox, FormControlLabel, FormGroup, LinearProgress, Slider, Snackbar } from "@mui/material";
-import { defaultStrengthConfig } from "../constants/constants";
+import { defaultStrengthConfig } from "../constants";
 import { useClipboard } from "use-clipboard-copy";
 
 export default function Generate() {

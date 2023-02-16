@@ -1,4 +1,3 @@
-/* eslint-disable no-undef */
 import { BottomNavigation, BottomNavigationAction } from '@mui/material';
 import { HelpRounded, LockClockRounded, LockResetRounded, LogoutRounded } from "@mui/icons-material";
 import * as ROUTES from './constants/routes';
@@ -13,19 +12,25 @@ import Login from './pages/login';
 import useAuthListener from './hooks/use-auth-listener';
 import Signup from './pages/signup';
 import Create from './pages/create';
-import { signOut } from 'firebase/auth';
+import { Auth, signOut } from 'firebase/auth';
 import Alerts from './pages/alerts';
-import { DOMMessages } from './constants/constants';
-import { addDoc, collection } from 'firebase/firestore';
+import { addDoc, collection, Firestore } from 'firebase/firestore';
+import { encryptData } from './encrypt';
+import { DOMMessage } from './types';
 
-function App({ auth, firestore }) {
+interface AppProps {
+  auth: Auth,
+  firestore: Firestore
+}
+
+function App({ auth, firestore }: AppProps) {
   const { user } = useAuthListener();
   const navigate = useNavigate();
   const tabs = ['/', '/generate', '/alerts', '/account'];
   const [value, setValue] = React.useState(0);
 
 
-  const handleChange = (event, newValue) => {
+  const handleChange = (event: React.SyntheticEvent, newValue: number) => {
     setValue(newValue);
     if (newValue === 3) signOut(auth);
     else navigate(tabs[newValue]);
@@ -35,16 +40,8 @@ function App({ auth, firestore }) {
     chrome.tabs && chrome.tabs.query({
       active: true, currentWindow: true
     }, function(tabs) {
-      chrome.tabs.sendMessage(tabs[0].id || 0, DOMMessages.LISTEN, function(response) {
-        // TODO: do something with response
-        // TODO: alert to add to vault
-        // TODO: get items from password
-        if(window.confirm('add to vault?')) {
-          let domain = new URL(tabs[0].url);
-          addDoc(collection(firestore, "vault"), { ...response, favIconUrl: tabs[0].favIconUrl, web_url: domain.origin, owner: user.uid }).then(() => {
-            window.alert(`${domain.origin} added to vault`);
-          })
-        }
+      chrome.storage.local.get("saved").then(result => {
+        console.log(result.saved);
       })
     })
   })

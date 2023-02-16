@@ -1,0 +1,1 @@
+export const defaultStrengthConfig = { lowercase: true, uppercase: true, numbers: true, randoms: true };

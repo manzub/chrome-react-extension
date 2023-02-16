@@ -12,12 +12,24 @@
     "activeTab",
     "clipboardRead",
     "clipboardWrite",
-    "tabs"
+    "tabs",
+    "storage"
   ],
+  "background": {
+    "service_worker": "background.js"
+  },
+  "content_security_policy": {
+    "extension_pages": "script-src 'self'; object-src 'self'"
+  },
   "content_scripts": [
     {
-      "matches": ["http://*/*", "https://*/*"],
-      "js": ["./static/js/content.js"]
+      "matches": [
+        "http://*/*",
+        "https://*/*"
+      ],
+      "js": [
+        "./static/js/content.js"
+      ]
     }
   ],
   "icons": {

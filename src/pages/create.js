@@ -39,7 +39,7 @@ export default function Create() {
     setLoading(true)
 
     try {
-      await addDoc(collection(firestore, "vault"), { ...form, owner: user.uid })
+      await addDoc(collection(firestore, "vault"), { ...form, value: encryptData(form.value), owner: user.uid })
       setLoading(false);
       setSnackbar(true);
       setSnackMsg(`Added ${form.web_url} to vault!`)
@@ -87,7 +87,7 @@ export default function Create() {
             error={form.value === ''}
             required
             value={form.value}
-            onChange={({target}) => updateForm({ ...form, value: encryptData(target.value) })}
+            onChange={({target}) => updateForm({ ...form, value: target.value })}
             id="outlined-adornment-password"
             type={showPassword ? 'text' : 'password'}
             endAdornment={
