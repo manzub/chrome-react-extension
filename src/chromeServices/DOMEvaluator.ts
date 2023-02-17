@@ -27,7 +27,6 @@ const messagesFromReactAppListener = (message: DOMMessage, sender: chrome.runtim
         }
         let currTabInfo: chrome.tabs.Tab = message.tab;
         if (window.confirm('add to passvault? ' + response.email)) {
-          // TODO: save to local and add to vault on popup launch and remove
           chrome.storage.local.get("saved").then(function (localData) {
             let savedLocal = [];
             localData.saved && localData.saved.forEach((elem: object) => savedLocal.push(elem));
