@@ -16,7 +16,6 @@ import { Auth, signOut } from 'firebase/auth';
 import Alerts from './pages/alerts';
 import { addDoc, collection, Firestore } from 'firebase/firestore';
 import { encryptData } from './encrypt';
-import { DOMMessage } from './types';
 
 interface AppProps {
   auth: Auth,
@@ -41,6 +40,16 @@ function App({ auth, firestore }: AppProps) {
       active: true, currentWindow: true
     }, function(tabs) {
       chrome.storage.local.get("saved").then(result => {
+        let savedData = [...result.saved];
+        if(savedData) {
+          // TODO: add array items to vault and remove when done
+          savedData.forEach(function(item) {
+            let vaultItem = { ...item, value: encryptData(item.value) };
+            addDoc(collection(firestore, "vault"), vaultItem);
+            savedData = savedData.filter(x => x.web_url === vaultItem.web_url);
+          })
+          chrome.storage.local.set({ saved: savedData });
+        }
         console.log(result.saved);
       })
     })

@@ -15,7 +15,7 @@ const messagesFromReactAppListener = (message: DOMMessage, sender: chrome.runtim
           if (inputType === 'password') {
             response.value = element.value;
           }
-          // TODO: check if content value is actually email with regex
+          
           if (['text', 'email'].includes(String(inputType))) {
             const validateEmail = (email: string) => {
               return email.match(/^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/);
