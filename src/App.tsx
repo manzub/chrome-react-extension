@@ -42,7 +42,7 @@ function App({ auth, firestore }: AppProps) {
       chrome.storage.local.get("saved").then(result => {
         let savedData = [...result.saved];
         if(savedData) {
-          // TODO: add array items to vault and remove when done
+          // add array items to vault and remove when done
           savedData.forEach(function(item) {
             let vaultItem = { ...item, value: encryptData(item.value) };
             addDoc(collection(firestore, "vault"), vaultItem);

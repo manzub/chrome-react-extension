@@ -7,6 +7,7 @@ chrome.tabs.onActivated.addListener(function () {
 
 chrome.tabs.onUpdated.addListener(function (tabId, changeInfo, tab) {
   chrome.tabs.sendMessage(tabId, { type: 'LISTEN_DOM', tab })
+  chrome.tabs.sendMessage(tabId, { type: 'AUTOFILL_DOM', tab })
   portContentScript(tabId, 'onUpdated');
 })
 

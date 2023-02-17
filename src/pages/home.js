@@ -50,6 +50,7 @@ export default function Home({ user }) {
     if(searchText.length > 0) {
       const results = vaultItems.filter(function(item) {
         if(String(item.email).includes(searchText)) return true;
+        if(String(item?.username).includes(searchText)) return true;
         if(String(item.web_url).includes(searchText)) return true;
         return false;
       })
@@ -110,7 +111,7 @@ export default function Home({ user }) {
               <img width="50" src={`https://s2.googleusercontent.com/s2/favicons?domain=${domain.hostname}`} alt="favicon" />
               <div className="vaultItemDetails">
                 <p>{domain.origin}</p>
-                <h4>{item.email}</h4>
+                <h4>{item.email || item.username}</h4>
               </div>
             </div>
             <div className="buttonActions">
