@@ -15,14 +15,19 @@ const messagesFromReactAppListener = (message: DOMMessage, sender: chrome.runtim
           if (inputType === 'password') {
             response.value = element.value;
           }
+          // TODO: check if content value is actually email with regex
           if (['text', 'email'].includes(String(inputType))) {
-            response.email = element.value;
+            const validateEmail = (email: string) => {
+              return email.match(/^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/);
+            };
+            if(validateEmail(element.value)) {
+              response.email = element.value;
+            }
           }
         }
         let currTabInfo: chrome.tabs.Tab = message.tab;
         if (window.confirm('add to passvault? ' + response.email)) {
-
-        } else {
+          // TODO: save to local and add to vault on popup launch and remove
           chrome.storage.local.get("saved").then(function (localData) {
             let savedLocal = [];
             localData.saved && localData.saved.forEach((elem: object) => savedLocal.push(elem));
