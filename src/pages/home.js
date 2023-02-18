@@ -1,3 +1,4 @@
+/* eslint-disable no-undef */
 import React, { useContext, useEffect } from "react";
 import { AddRounded, Close, ContactsRounded, ContentCopy, DeleteRounded, OpenInNewRounded, PaymentRounded, SearchRounded } from "@mui/icons-material";
 import { IconButton, InputAdornment, Snackbar, TextField } from "@mui/material";
@@ -108,7 +109,7 @@ export default function Home({ user }) {
         return(<React.Fragment key={idx}>
           <div className="vaultItem">
             <div className="vaultItemInfo">
-              <img width="50" src={`https://s2.googleusercontent.com/s2/favicons?domain=${domain.hostname}`} alt="favicon" />
+              <img width="50" src={item.favIconUrl} alt="favicon" />
               <div className="vaultItemDetails">
                 <p>{domain.origin}</p>
                 <h4>{item.email || item.username}</h4>

@@ -43,17 +43,18 @@ function App({ auth, firestore }: AppProps) {
         let savedData = [...result.saved];
         if(savedData) {
           // add array items to vault and remove when done
-          savedData.forEach(function(item) {
-            let vaultItem = { ...item, value: encryptData(item.value) };
-            addDoc(collection(firestore, "vault"), vaultItem);
-            savedData = savedData.filter(x => x.web_url === vaultItem.web_url);
+          savedData.slice().reverse().forEach(async function(item) {
+            let vaultItem = { ...item, value: encryptData(item.value), owner: user.uid };
+            await addDoc(collection(firestore, "vault"), vaultItem);
+            savedData.pop();
           })
-          chrome.storage.local.set({ saved: savedData });
+          chrome.storage.local.set({ saved: [] });
         }
         console.log(result.saved);
       })
     })
-  })
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   return (
     <div className="App">
