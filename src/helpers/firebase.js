@@ -22,3 +22,11 @@ export const signInWithGoogle = async (auth, db, onError) => {
     onError(error.message);
   }
 }
+
+export const getVaultItemById = (vaultItems, docId) => {
+  if(vaultItems) {
+    return [...vaultItems].find(x => x.docId === docId);
+  }
+
+  return null;
+}

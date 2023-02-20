@@ -16,6 +16,7 @@ import { Auth, signOut } from 'firebase/auth';
 import Alerts from './pages/alerts';
 import { addDoc, collection, Firestore } from 'firebase/firestore';
 import { encryptData } from './encrypt';
+import EditPassword from './pages/edit';
 
 interface AppProps {
   auth: Auth,
@@ -78,6 +79,11 @@ function App({ auth, firestore }: AppProps) {
           <Route path={ROUTES.ALERT} element={
             <ProtectedRoute user={user}>
               <Alerts />
+            </ProtectedRoute>
+          } />
+          <Route path="/edit/:docId" element={
+            <ProtectedRoute user={user}>
+              <EditPassword />
             </ProtectedRoute>
           } />
 
