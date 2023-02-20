@@ -3,6 +3,15 @@ export type DOMMessage = {
   tab: chrome.tabs.Tab
 }
 
+export type VaultItem = {
+  email: string,
+  favIconUrl: string,
+  owner: string,
+  username: string,
+  value: string,
+  web_url: string
+}
+
 export type DOMMessageResponse = {
   email: string;
   username: string | null;

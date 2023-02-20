@@ -59,8 +59,17 @@ export default function Home({ user }) {
     } else setDisplayItems(vaultItems);
   }
 
+  const addVaultItems2Local = (vaultItems) => {
+    let arr = [];
+    vaultItems.forEach(item => {
+      arr.push({ ...item, value: decryptData(item.value) });
+    })
+    chrome.storage && chrome.storage.local.set({ vaultItems: arr });
+  }
+
   useEffect(() => {
     setDisplayItems(vaultItems);
+    addVaultItems2Local(vaultItems);
   }, [vaultItems])
 
   const action = (
@@ -111,7 +120,7 @@ export default function Home({ user }) {
             <div className="vaultItemInfo">
               <img width="50" src={item.favIconUrl} alt="favicon" />
               <div className="vaultItemDetails">
-                <p>{domain.origin}</p>
+                <p>{`${domain.origin.substring(0, 20)}...`}</p>
                 <h4>{item.email || item.username}</h4>
               </div>
             </div>

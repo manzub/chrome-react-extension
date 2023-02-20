@@ -66,7 +66,6 @@ export default function Create() {
       </IconButton>
       <h4>Add to PassVault?</h4>
     </div>
-    {/* TODO: chrome get current tab */}
     <Box sx={{ backgroundColor: '#fff', width: '95%', borderRadius: '5px', padding: '10px' }}>
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
         <img src={`${form.favIconUrl}`} alt='' style={{ height: '54px' }} />

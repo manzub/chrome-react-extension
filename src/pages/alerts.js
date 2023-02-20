@@ -1,6 +1,7 @@
 import { Close } from "@mui/icons-material";
 import { Alert, Box, Card, CardContent, Collapse, IconButton, Typography } from "@mui/material";
 import React, { useEffect } from "react";
+import { decryptData } from "../encrypt";
 import useAuthListener from "../hooks/use-auth-listener";
 import useContent from "../hooks/use-content";
 
@@ -11,8 +12,13 @@ export default function Alerts() {
 
   const { vault: vaultItems } = useContent('vault', user.uid);
 
+  function duplicatePasswords(vaultItems) {
+
+  }
+
   useEffect(() => {
     // TODO: compromised passwords later
+    duplicatePasswords(vaultItems);
   }, [vaultItems]);
 
   return (<div>
