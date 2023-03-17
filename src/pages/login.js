@@ -16,6 +16,7 @@ export default function Login() {
   const [isLoading, setLoading] = React.useState(false);
   const [showPassword, setShowPassword] = React.useState(false);
   const [form, updateForm] = React.useState({ email: '', password: '' });
+  // const [veriToken, setVeriToken] = React.useState('');
 
   const isInvalid = form.email === '' || form.password === '' || isLoading;
 
@@ -36,7 +37,10 @@ export default function Login() {
 
     try {
       await signInWithEmailAndPassword(auth, form.email, form.password);
+      // let veriToken = Math.floor(100000 + Math.random() * 900000);
+      // setVeriToken(veriToken);
       navigate(ROUTES.HOME)
+
     } catch (error) {
       updateForm({ email: '', password: '' })
       showError(Error(error).message);
@@ -50,7 +54,7 @@ export default function Login() {
       await signInWithGoogle(auth, firestore, showError);
       navigate(ROUTES.HOME);
     } catch (error) {
-      
+
     }
   }
 
@@ -102,7 +106,7 @@ export default function Login() {
         </div>
       </Box>
       <h5 style={{ textAlign: 'center', marginBottom: '10px' }}><Link>FORGOT PASSWORD ?</Link></h5>
-      <Button onClick={handleGoogleSignin} sx={{ m: 1, width: '95%', fontSize: '15px' }} variant="outlined" size="large" startIcon={<OpenInNewRounded />}>Continue with Google</Button>
+      <Button disabled={true} onClick={handleGoogleSignin} sx={{ m: 1, width: '95%', fontSize: '15px' }} variant="outlined" size="large" startIcon={<OpenInNewRounded />}>Continue with Google</Button>
     </div>
   </div>)
 }

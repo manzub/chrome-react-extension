@@ -14,9 +14,11 @@ import Signup from './pages/signup';
 import Create from './pages/create';
 import { Auth, signOut } from 'firebase/auth';
 import Alerts from './pages/alerts';
-import { addDoc, collection, Firestore } from 'firebase/firestore';
+import { addDoc, collection, doc, Firestore, updateDoc } from 'firebase/firestore';
 import { encryptData } from './encrypt';
 import EditPassword from './pages/edit';
+import useContent from './hooks/use-content';
+import { VaultItem } from './types';
 
 interface AppProps {
   auth: Auth,
@@ -28,6 +30,7 @@ function App({ auth, firestore }: AppProps) {
   const navigate = useNavigate();
   const tabs = ['/', '/generate', '/alerts', '/account'];
   const [value, setValue] = React.useState(0);
+  const { vault: firestoreItems } = useContent("vault", (user ? user.uid : null));
 
 
   const handleChange = (event: React.SyntheticEvent, newValue: number) => {
@@ -44,9 +47,14 @@ function App({ auth, firestore }: AppProps) {
         let savedData = [...result.saved];
         if(savedData) {
           // add array items to vault and remove when done
+          // update saved items if itemExists
           savedData.slice().reverse().forEach(async function(item) {
             let vaultItem = { ...item, value: encryptData(item.value), owner: user.uid };
-            await addDoc(collection(firestore, "vault"), vaultItem);
+            if(vaultItem.itemExists) {
+              let fsItem = firestoreItems.find((x: VaultItem) => x.web_url === vaultItem.web_url);
+              fsItem && await updateDoc(doc(firestore, "vault", fsItem.docId), { ...vaultItem })
+            }
+            !vaultItem.itemExists && await addDoc(collection(firestore, "vault"), vaultItem);
             savedData.pop();
           })
           chrome.storage.local.set({ saved: [] });

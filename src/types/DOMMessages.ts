@@ -9,7 +9,9 @@ export type VaultItem = {
   owner: string,
   username: string,
   value: string,
-  web_url: string
+  web_url: string,
+  docId: string,
+  itemExists: boolean | undefined
 }
 
 export type DOMMessageResponse = {

@@ -17,6 +17,7 @@
     "@types/react": "^17.0.15",
     "@types/react-dom": "^17.0.9",
     "crypto-js": "^4.1.1",
+    "email-js": "^2.0.2",
     "firebase": "^9.17.1",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",

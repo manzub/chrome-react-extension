@@ -75,7 +75,7 @@ export default function Generate() {
     }
     let passwordStrength = { validKey: result, color: result.length < 6 ? 'error' : 'success', message: result.length < 6 ? 'weak' : 'Good' }
 
-    // TODO: switch (result.length) {
+    // switch (result.length) {
     updateStrength(passwordStrength);
   }, [passwordLength, strengthConfig])
 

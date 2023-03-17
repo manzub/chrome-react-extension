@@ -9,6 +9,7 @@ import { getVaultItemById } from '../helpers/firebase';
 import useAuthListener from '../hooks/use-auth-listener';
 import useContent from '../hooks/use-content';
 
+// authentication providers - email, google, facebook, multi-step verification
 
 export default function EditPassword() {
   let { docId } = useParams();
@@ -50,6 +51,10 @@ export default function EditPassword() {
       setLoading(false);
       setSnackbar(true);
       setSnackMsg(`Updated ${form.web_url} vault!`)
+      if(window.confirm(`Visit ${form.web_url} to update your saved password`)) {
+        // edit page should redirect to the site for you to update the password on the site
+        window.open(form.web_url, '_blank');
+      }
     } catch(error) {
       setLoading(false);
       setSnackbar(false);

@@ -3,10 +3,10 @@ import { Auth } from "firebase/auth";
 import { Firestore } from "firebase/firestore";
 import { createContext } from "react";
 
-interface IFirebaseContext {
+export type FirebaseContextType = {
   firebase: FirebaseApp,
   auth: Auth,
   firestore: Firestore
 }
 
-export const FirebaseContext = createContext<IFirebaseContext | null>(null);
+export const FirebaseContext = createContext<FirebaseContextType | null>(null);
