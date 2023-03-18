@@ -1,7 +1,7 @@
 import { DOMMessage, DOMMessageResponse, VaultItem } from "../types";
 
 // fix update password
-// fix autofill
+// fix persistent autofill
 const messagesFromReactAppListener = (message: DOMMessage, sender: chrome.runtime.MessageSender, sendResponse: (response: DOMMessageResponse) => void) => {
   console.log('[content.js]. Message received', message.type);
   let response: DOMMessageResponse = { email: '', value: '', username: null };
@@ -10,7 +10,7 @@ const messagesFromReactAppListener = (message: DOMMessage, sender: chrome.runtim
   // console.log('DOMContentLoaded');
   chrome.storage.local.get("vaultItems").then(function (result) {
     let vaultItems: VaultItem[] = result.vaultItems
-    // listen for form submits
+    // DONE: listen for form submits
     if (message.type === 'LISTEN_DOM') {
       // select all form elements on the page and add onsubmit listeners
       let formsArray = document.querySelectorAll("form");
@@ -25,6 +25,7 @@ const messagesFromReactAppListener = (message: DOMMessage, sender: chrome.runtim
             // find email fields next
             if (['text', 'email'].includes(String(inputType))) {
               const validateEmail = (email: string) => {
+                // eslint-disable-next-line no-useless-escape
                 return email.match(/^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/);
               };
               if (validateEmail(element.value)) { response.email = element.value; }
@@ -42,19 +43,28 @@ const messagesFromReactAppListener = (message: DOMMessage, sender: chrome.runtim
 
           let currTabDomain = new URL(String(currTabInfo.url));
           let itemExists = vaultItems.find(x => x.web_url === currTabDomain.origin);
-          if (response.value && window.confirm(itemExists ? `update password for: ${currTabDomain.origin}` : 'add to passvault? ' + response.email)) {
-            chrome.storage.local.get("saved").then(function (localData) {
-              let savedLocal = [];
-              localData.saved && localData.saved.forEach((elem: object) => savedLocal.push(elem));
-              let webUrl = new URL(String(currTabInfo?.url)).origin;
-              savedLocal.push({ ...response, web_url: webUrl, favIconUrl: currTabInfo?.favIconUrl, itemExists: !!itemExists })
-              chrome.storage.local.set({ saved: savedLocal })
-            })
+          if (response.value) {
+            let confirmMessage = 'add to passvault? ' + response.email;
+            let sameDetails = [response.email, response.username].includes(itemExists?.email || itemExists?.username || '');
+            if (!sameDetails) {
+              confirmMessage = `update password for: ${currTabDomain.origin}`;
+            }
+
+            // check if either item exists and same details found or no existing item
+            if (((itemExists && !sameDetails) || !itemExists) && window.confirm(confirmMessage)) {
+              chrome.storage.local.get("saved").then(function (localData) {
+                let savedLocal = [];
+                localData.saved && localData.saved.forEach((elem: object) => savedLocal.push(elem));
+                let webUrl = new URL(String(currTabInfo?.url)).origin;
+                savedLocal.push({ ...response, web_url: webUrl, favIconUrl: currTabInfo?.favIconUrl, itemExists: !!itemExists })
+                chrome.storage.local.set({ saved: savedLocal })
+              })
+            }
           }
         })
       })
     }
-    // background autofill password for users
+    // TODO: fix background autofill password for users
     if (message.type === 'AUTOFILL_DOM') {
       if (vaultItems) {
         for (let index = 0; index < vaultItems.length; index++) {

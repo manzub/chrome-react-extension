@@ -108,7 +108,7 @@ export default function Home({ user }) {
         <MenuItem onClick={handleClose}>Save all entered data</MenuItem>
       </Menu>
     </div>
-    <div className="homeContents" style={{ padding: '10px 0px' }}>
+    <div className="homeContents" style={{ padding: '10px 0px', marginBottom: '40px' }}>
       {displayItems.length === 0 && <React.Fragment>
         <h4 style={{ textAlign: 'center' }}>Nothing to see here!</h4>
       </React.Fragment>}
