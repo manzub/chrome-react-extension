@@ -8,7 +8,7 @@ import { FirebaseContext } from '../context/firebase';
 import { encryptData } from '../encrypt';
 import useAuthListener from '../hooks/use-auth-listener';
 
-export default function Create() {
+export default function Create({ vaultItems }) {
   const navigate = useNavigate();
   const { user } = useAuthListener();
   const { firestore } = useContext(FirebaseContext);
@@ -34,15 +34,38 @@ export default function Create() {
     setError(error);
   }
 
+  const validateEmail = (email) => {
+    return String(email)
+      .toLowerCase()
+      .match(
+        /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|.(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+      );
+  };
+
+  function validateUrl(value) {
+    return /^(?:(?:(?:https?|ftp):)?\/\/)(?:\S+(?::\S*)?@)?(?:(?!(?:10|127)(?:\.\d{1,3}){3})(?!(?:169\.254|192\.168)(?:\.\d{1,3}){2})(?!172\.(?:1[6-9]|2\d|3[0-1])(?:\.\d{1,3}){2})(?:[1-9]\d?|1\d\d|2[01]\d|22[0-3])(?:\.(?:1?\d{1,2}|2[0-4]\d|25[0-5])){2}(?:\.(?:[1-9]\d?|1\d\d|2[0-4]\d|25[0-4]))|(?:(?:[a-z\u00a1-\uffff0-9]-*)*[a-z\u00a1-\uffff0-9]+)(?:\.(?:[a-z\u00a1-\uffff0-9]-*)*[a-z\u00a1-\uffff0-9]+)*(?:\.(?:[a-z\u00a1-\uffff]{2,})))(?::\d{2,5})?(?:[/?#]\S*)?$/i.test(value);
+  }
+
   async function addToVault(e) {
     e.preventDefault();
     setLoading(true)
 
     try {
-      await addDoc(collection(firestore, "vault"), { ...form, value: encryptData(form.value), owner: user.uid })
-      setLoading(false);
-      setSnackbar(true);
-      setSnackMsg(`Added ${form.web_url} to vault!`)
+      // TODO: test validate form inputs
+      if(validateEmail(form.email)) {
+        if(validateUrl(form.web_url)) {
+          let fsItem = vaultItems.find((x) => x.web_url === form.web_url);
+          if(!fsItem) {
+            await addDoc(collection(firestore, "vault"), { ...form, value: encryptData(form.value), owner: user.uid })
+            setLoading(false);
+            setSnackbar(true);
+            setSnackMsg(`Added ${form.web_url} to vault!`)
+            setTimeout(() => {
+              navigate('/');
+            }, 3500);
+          } else throw new Error('Item already exists in vault');
+        } else throw new Error('Invalid url, please copy and paste full url  (\'http\' is missing)');
+      }
     } catch(error) {
       setLoading(false);
       setSnackbar(false);
@@ -79,7 +102,7 @@ export default function Create() {
               </IconButton>
             } sx={{ mb: 2 }}>{error}</Alert>
           </Collapse>}
-        <TextField sx={{ marginBottom: '20px', width: '100%' }} required label="Email" value={form.email} onChange={({ target }) => updateForm({ ...form, email: target.value })} />
+        <TextField sx={{ marginBottom: '20px', width: '100%' }} type="email" required label="Email" value={form.email} onChange={({ target }) => updateForm({ ...form, email: target.value })} />
         <FormControl sx={{ width: '100%' }} variant="outlined">
           <InputLabel htmlFor="outlined-adornment-password">Master Password</InputLabel>
           <OutlinedInput

@@ -81,7 +81,7 @@ function App({ auth, firestore }: AppProps) {
           } />
           <Route path={ROUTES.CREATE} element={
             <ProtectedRoute user={user}>
-              <Create />
+              <Create vaultItems={firestoreItems} />
             </ProtectedRoute>
           } />
           <Route path={ROUTES.ALERT} element={

@@ -20,6 +20,7 @@ export default function Home({ user }) {
   const [snackbar, setSnackbar] = React.useState(false);
   const [snackMsg, setSnackMsg] = React.useState(null);
   const [anchorEl, setAnchorEl] = React.useState(null);
+  const [hidePassword, setHiddenPass] = React.useState(true);
   const [displayItems, setDisplayItems] = React.useState([]);
 
   const open = Boolean(anchorEl);
@@ -103,9 +104,7 @@ export default function Home({ user }) {
         }}
       >
         <MenuItem onClick={() => navigate('/create')}><DeleteRounded /> Add password</MenuItem>
-        <MenuItem onClick={handleClose}><ContactsRounded /> Add address</MenuItem>
-        <MenuItem onClick={handleClose}><PaymentRounded /> Add payment card</MenuItem>
-        <MenuItem onClick={handleClose}>Save all entered data</MenuItem>
+        {/* <MenuItem onClick={handleClose}><ContactsRounded /> Add address</MenuItem> */}
       </Menu>
     </div>
     <div className="homeContents" style={{ padding: '10px 0px', marginBottom: '40px' }}>
@@ -116,12 +115,13 @@ export default function Home({ user }) {
       {displayItems.map((item, idx) => {
         const domain = new URL(item.web_url);
         return(<React.Fragment key={idx}>
-          <div className="vaultItem">
+          <div onClick={() => setHiddenPass(!hidePassword)} className="vaultItem">
             <div className="vaultItemInfo">
               <img width="50" src={item.favIconUrl} alt="favicon" />
               <div className="vaultItemDetails">
                 <p>{`${domain.origin.substring(0, 20)}...`}</p>
-                <h4>{item.email || item.username}</h4>
+                <h4>{String(item.email || item.username).substring(0, 20)}</h4>
+                { hidePassword && <h5>{decryptData(item.value)}</h5>}
               </div>
             </div>
             <div className="buttonActions">
