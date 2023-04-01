@@ -3,7 +3,7 @@ import styled from "styled-components";
 const primaryColor = '#1976d2';
 
 export const Button = styled.button`
-display: inline-flex;
+display: flex;
 -webkit-box-align: center;
 align-items: center;
 -webkit-box-pack: center;

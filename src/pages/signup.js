@@ -1,15 +1,18 @@
 import React, { useContext } from "react";
 import { createUserWithEmailAndPassword } from "firebase/auth";
-import { OpenInNewRounded, Visibility, VisibilityOff, Close } from "@mui/icons-material";
-import { Alert, Box, Button, Collapse, FormControl, IconButton, InputAdornment, InputLabel, OutlinedInput, TextField } from "@mui/material";
-import { useNavigate } from "react-router-dom";
+import { Visibility, VisibilityOff, Close } from "@mui/icons-material";
+import { Alert, Box, Button, Collapse, FormControl, IconButton, InputAdornment, InputLabel, OutlinedInput, Snackbar, TextField } from "@mui/material";
+import CloseIcon from '@mui/icons-material/Close';
+import { NavLink, useNavigate } from "react-router-dom";
 import { FirebaseContext } from "../context/firebase";
 import * as ROUTES from "../constants/routes";
-import { signInWithGoogle } from "../helpers/firebase";
 
 export default function Signup() {
   const navigate = useNavigate();
-  const { auth, firestore } = useContext(FirebaseContext);
+  const { auth } = useContext(FirebaseContext);
+
+  const [snackbar, setSnackbar] = React.useState(false);
+  const [snackMsg, setSnackMsg] = React.useState(null);
 
   const [open, setOpen] = React.useState(false);
   const [error, setError] = React.useState('');
@@ -30,32 +33,43 @@ export default function Signup() {
     setError(error);
   }
 
+  const handleClose = (event, reason) => {
+    if (reason === 'clickaway') {
+      return;
+    }
+    setSnackbar(false);
+  };
+
   async function handleSignin(e) {
     e.preventDefault();
     setLoading(true);
 
     try {
       await createUserWithEmailAndPassword(auth, form.email, form.password);
-      navigate(ROUTES.HOME)
+      setSnackMsg('User created successfully!');
+      setSnackbar(true);
+      setTimeout(() => {
+        navigate(ROUTES.HOME)
+      }, 4000);
     } catch (error) {
       updateForm({ email: '', password: '' })
       showError(Error(error).message);
       setLoading(false)
     }
-
   }
 
-  async function handleGoogleSignin() {
-    try {
-      await signInWithGoogle(auth, firestore, showError);
-      navigate(ROUTES.HOME);
-    } catch (error) {
-      
-    }
-  }
+
+  const action = (
+    <React.Fragment>
+      <IconButton size="small" aria-label="close" color="inherit" onClick={handleClose}>
+        <CloseIcon fontSize="small" />
+      </IconButton>
+    </React.Fragment>
+  );
 
   return (<div className="loginPage">
     <div className="loginHeader">
+      <NavLink to="/login">Back to Login</NavLink>
       <h4>Get started with your email</h4>
     </div>
     <div className="loginBody">
@@ -73,12 +87,11 @@ export default function Signup() {
 
           <div className="form-group" style={{ marginBottom: '30px' }}>
             <TextField value={form.email} onChange={({ target }) => updateForm({ ...form, email: target.value })} required label="Email address" />
-            <h6 style={{ padding: '0px 10px', color: '#444' }}>To create an account please use an email that you trust as verification and backup would require this email address.</h6>
           </div>
 
           <div className="form-group" style={{ marginBottom: '30px' }}>
             <FormControl sx={{ m: 1, width: '95%' }} variant="outlined">
-              <InputLabel htmlFor="outlined-adornment-password">Master Password</InputLabel>
+              <InputLabel htmlFor="outlined-adornment-password">Password</InputLabel>
               <OutlinedInput
                 error={form.password === ''}
                 value={form.password}
@@ -101,15 +114,16 @@ export default function Signup() {
                 label="Password"
               />
             </FormControl>
-            <h6 style={{ color: '#444' }}>A password to validate your account after signup, other validation methods can be selected later.</h6>
+            <h6 style={{ color: '#444' }}>Choose a secure password you will remember, other authorisation methods can be selected later.</h6>
           </div>
 
           <div className="buttonActions">
             <Button onClick={handleSignin} disabled={isInvalid} sx={{ m: 1, width: '95%', fontSize: '20px' }} variant="contained" size="large">Create an account</Button>
-            <Button onClick={handleGoogleSignin} sx={{ m: 1, width: '95%', fontSize: '15px' }} variant="outlined" size="large" startIcon={<OpenInNewRounded />}>Continue with Google</Button>
+            {/* <Button onClick={handleGoogleSignin} sx={{ m: 1, width: '95%', fontSize: '15px' }} variant="outlined" size="large" startIcon={<OpenInNewRounded />}>Continue with Google</Button> */}
           </div>
         </div>
       </Box>
     </div>
+    <Snackbar open={snackbar} autoHideDuration={3000} onClose={handleClose} message={snackMsg} action={action} />
   </div>)
 }

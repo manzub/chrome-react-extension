@@ -51,7 +51,6 @@ export default function Create({ vaultItems }) {
     setLoading(true)
 
     try {
-      // TODO: test validate form inputs
       if(validateEmail(form.email)) {
         if(validateUrl(form.web_url)) {
           let fsItem = vaultItems.find((x) => x.web_url === form.web_url);
@@ -64,8 +63,8 @@ export default function Create({ vaultItems }) {
               navigate('/');
             }, 3500);
           } else throw new Error('Item already exists in vault');
-        } else throw new Error('Invalid url, please copy and paste full url  (\'http\' is missing)');
-      }
+        } else throw new Error('Invalid url, please copy and paste full url (example http://example.com)');
+      } else throw new Error('Invalid email address');
     } catch(error) {
       setLoading(false);
       setSnackbar(false);

@@ -1,6 +1,6 @@
 /* eslint-disable no-undef */
 import React, { useContext, useEffect } from "react";
-import { AddRounded, Close, ContactsRounded, ContentCopy, DeleteRounded, OpenInNewRounded, PaymentRounded, SearchRounded } from "@mui/icons-material";
+import { AddRounded, Close, ContentCopy, DeleteRounded, OpenInNewRounded, SearchRounded } from "@mui/icons-material";
 import { IconButton, InputAdornment, Snackbar, TextField } from "@mui/material";
 import { Button } from "../helpers/styledComponents";
 import Menu from '@mui/material/Menu';
@@ -68,10 +68,17 @@ export default function Home({ user }) {
     chrome.storage && chrome.storage.local.set({ vaultItems: arr });
   }
 
+  const openLanding = () => {
+    let url = `landing.html`;
+    chrome.tabs.create({ url: url, active: true });
+  }
+
   useEffect(() => {
     setDisplayItems(vaultItems);
     addVaultItems2Local(vaultItems);
   }, [vaultItems])
+
+  // TODO: create landing page
 
   const action = (
     <React.Fragment>
@@ -90,7 +97,7 @@ export default function Home({ user }) {
           </InputAdornment>
         ),
       }} variant="outlined" label="Search your vault" />
-      <Button>Vault <OpenInNewRounded /></Button>
+      <span onClick={openLanding}><Button>Vault <OpenInNewRounded /></Button></span>
       <IconButton aria-label="Add New" onClick={handleClick}>
         <AddRounded />
       </IconButton>
@@ -107,7 +114,7 @@ export default function Home({ user }) {
         {/* <MenuItem onClick={handleClose}><ContactsRounded /> Add address</MenuItem> */}
       </Menu>
     </div>
-    <div className="homeContents" style={{ padding: '10px 0px', marginBottom: '40px' }}>
+    <div className="homeContents" style={{ padding: '10px 0px', }}>
       {displayItems.length === 0 && <React.Fragment>
         <h4 style={{ textAlign: 'center' }}>Nothing to see here!</h4>
       </React.Fragment>}
@@ -121,7 +128,7 @@ export default function Home({ user }) {
               <div className="vaultItemDetails">
                 <p>{`${domain.origin.substring(0, 20)}...`}</p>
                 <h4>{String(item.email || item.username).substring(0, 20)}</h4>
-                { hidePassword && <h5>{decryptData(item.value)}</h5>}
+                { !hidePassword && <h5 style={{color:'yellow'}}>{decryptData(item.value)}</h5>}
               </div>
             </div>
             <div className="buttonActions">

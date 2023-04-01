@@ -13,13 +13,14 @@ import { useClipboard } from "use-clipboard-copy";
 export default function Generate() {
   const clipboard = useClipboard();
 
+  const [open, setOpen] = React.useState(true);
   const [snackbar, setSnackbar] = React.useState(false);
   const [snackMsg, setSnackMsg] = React.useState(null);
   const [disabledCheckbox, setDisabled] = React.useState(false);
+  const [disabledBox, setDisabledBox] = React.useState('');
   const [passwordLength, setValue] = React.useState(10);
   const [strengthConfig, setParams] = React.useState(defaultStrengthConfig);
   const [passwordStrength, updateStrength] = React.useState({ color: 'success', message: 'good', validKey: 'password' });
-  const [open, setOpen] = React.useState(true);
 
   const passwordLengthHandle = (event, newValue) => setValue(newValue)
 
@@ -31,6 +32,7 @@ export default function Generate() {
     setParams(defaultStrengthConfig);
     setValue(10);
     setDisabled(false);
+    setDisabledBox('');
   }
 
   const copyGenerated = React.useCallback(() => {
@@ -48,14 +50,22 @@ export default function Generate() {
     if (reason === 'clickaway') {
       return;
     }
-
     setSnackbar(false);
   };
 
   useEffect(() => {
     const validChecks = Object.values(strengthConfig).filter(x => x === true);
-    validChecks && setDisabled(!!(validChecks.length < 2));
-  }, [strengthConfig]);
+    if(validChecks.length === 1) {
+      setDisabled(!!(validChecks.length === 1));
+      let validItem = Object.entries(strengthConfig).find(x => x[1] === true);
+      setDisabledBox(validItem[0]);
+    } else {
+      if(disabledCheckbox) {
+        setDisabled(!!(validChecks.length === 1))
+        setDisabledBox('');
+      }
+    }
+  }, [strengthConfig, disabledCheckbox]);
 
   useEffect(() => {
     // generate new passwords everytime changes is made
@@ -121,10 +131,10 @@ export default function Generate() {
         <p>Password Length: <input type="number" style={{ width: '35px', padding: '5px', fontSize: '15px' }} value={passwordLength} onChange={passwordLengthHandle} /> characters</p>
         <Slider defaultValue={10} value={passwordLength} min={4} max={30} onChange={passwordLengthHandle} />
         <FormGroup style={{ padding: '10px' }}>
-          <FormControlLabel sx={{ padding: '5px 0px' }} control={<Checkbox disabled={disabledCheckbox} checked={strengthConfig.lowercase} onChange={strengthConfigHandle} name="lowercase" />} label="Lowercase (abc)" />
-          <FormControlLabel sx={{ padding: '5px 0px' }} control={<Checkbox disabled={disabledCheckbox} checked={strengthConfig.uppercase} onChange={strengthConfigHandle} name="uppercase" />} label="Uppercase (ABC)" />
-          <FormControlLabel sx={{ padding: '5px 0px' }} control={<Checkbox disabled={disabledCheckbox} checked={strengthConfig.numbers} onChange={strengthConfigHandle} name="numbers" />} label="Numbers (123)" />
-          <FormControlLabel sx={{ padding: '5px 0px' }} control={<Checkbox disabled={disabledCheckbox} checked={strengthConfig.randoms} onChange={strengthConfigHandle} name="randoms" />} label="Randomized Symbols (?@&)" />
+          <FormControlLabel sx={{ padding: '5px 0px' }} control={<Checkbox disabled={disabledCheckbox && disabledBox === 'lowercase'} checked={strengthConfig.lowercase} onChange={strengthConfigHandle} name="lowercase" />} label="Lowercase (abc)" />
+          <FormControlLabel sx={{ padding: '5px 0px' }} control={<Checkbox disabled={disabledCheckbox && disabledBox === 'uppercase'} checked={strengthConfig.uppercase} onChange={strengthConfigHandle} name="uppercase" />} label="Uppercase (ABC)" />
+          <FormControlLabel sx={{ padding: '5px 0px' }} control={<Checkbox disabled={disabledCheckbox && disabledBox === 'numbers'} checked={strengthConfig.numbers} onChange={strengthConfigHandle} name="numbers" />} label="Numbers (123)" />
+          <FormControlLabel sx={{ padding: '5px 0px' }} control={<Checkbox disabled={disabledCheckbox && disabledBox === 'randoms'} checked={strengthConfig.randoms} onChange={strengthConfigHandle} name="randoms" />} label="Special Characters (?@&)" />
         </FormGroup>
       </div>
     </div>
