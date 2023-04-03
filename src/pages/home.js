@@ -77,9 +77,7 @@ export default function Home({ user }) {
     setDisplayItems(vaultItems);
     addVaultItems2Local(vaultItems);
   }, [vaultItems])
-
-  // TODO: create landing page
-
+  
   const action = (
     <React.Fragment>
       <IconButton size="small" aria-label="close" color="inherit" onClick={() => setSnackbar(false)}>

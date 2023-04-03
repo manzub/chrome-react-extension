@@ -119,7 +119,6 @@ export default function Signup() {
 
           <div className="buttonActions">
             <Button onClick={handleSignin} disabled={isInvalid} sx={{ m: 1, width: '95%', fontSize: '20px' }} variant="contained" size="large">Create an account</Button>
-            {/* <Button onClick={handleGoogleSignin} sx={{ m: 1, width: '95%', fontSize: '15px' }} variant="outlined" size="large" startIcon={<OpenInNewRounded />}>Continue with Google</Button> */}
           </div>
         </div>
       </Box>

@@ -1,7 +1,6 @@
 import { DOMMessage, DOMMessageResponse, VaultItem } from "../types";
 
-// fix update password
-// fix persistent autofill
+// TODO: fix listener
 const messagesFromReactAppListener = (message: DOMMessage, sender: chrome.runtime.MessageSender, sendResponse: (response: DOMMessageResponse) => void) => {
   console.log('[content.js]. Message received', message.type);
   let response: DOMMessageResponse = { email: '', value: '', username: null };
