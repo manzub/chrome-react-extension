@@ -38,6 +38,9 @@ This Chrome extension provides a secure and user-friendly solution for managing 
 - **Backend**: Firebase for encrypted storage and synchronization.
 - **Browser Integration**: Vanilla JS for seamless Chrome API interactions.
 
+<img width="640" alt="passvault" src="https://github.com/user-attachments/assets/6aeea496-ebbd-4446-bd21-4fdc09f01e81" />
+
+
 ## Installation
 1. Clone the repository:
    ```bash
